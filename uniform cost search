@@ -1,0 +1,41 @@
+from queue import PriorityQueue
+
+def uniform_cost_search(graph, start, goal):
+    pq = PriorityQueue()
+    pq.put((0, start, [start]))  # (cost, node, path)
+    visited = {}
+
+    while not pq.empty():
+        cost, current, path = pq.get()
+
+        print(f"Visiting: {current} with cost {cost}")
+
+        if current == goal:
+            return path, cost
+
+        if current in visited and visited[current] <= cost:
+            continue
+
+        visited[current] = cost
+
+        for neighbor, weight in graph.get(current, {}).items():
+            pq.put((cost + weight, neighbor, path + [neighbor]))
+
+    return None, float('inf')
+
+
+# Graph representation (with costs)
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'D': 2, 'E': 5},
+    'C': {'F': 3},
+    'D': {},
+    'E': {'G': 1},
+    'F': {'G': 2},
+    'G': {}
+}
+
+path, cost = uniform_cost_search(graph, 'A', 'G')
+
+print(f"Shortest Path: {path}")
+print(f"Total Cost: {cost}")
